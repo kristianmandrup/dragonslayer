@@ -32,6 +32,7 @@
     "bacon.jquery": "x",
     "sweet.js": "x",
     "dada-js": "x",
+    "absurd": "x",
     "xtend": "x",
     "bacon.query": "kristianmandrup/bacon.jquery#flexify"
   },

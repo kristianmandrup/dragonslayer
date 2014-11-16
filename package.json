@@ -32,7 +32,8 @@
     "bacon.jquery": "x",
     "sweet.js": "x",
     "dada-js": "x",
-    "xtend": "x"
+    "xtend": "x",
+    "bacon.query": "kristianmandrup/bacon.jquery#flexify"
   },
   "devDependencies": {
     "mocha": "x",

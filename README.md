@@ -19,3 +19,7 @@ Absurd(dada.assemblage(styles)).compile(function(err, css) {
   }
 });
 ```
+
+## PocketGrid
+
+Will be used as grid system, when available as npm install.    

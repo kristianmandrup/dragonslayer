@@ -29,11 +29,13 @@
     "mercury-jsxify": ">=0.13.0",
     "crossroads": "x",
     "baconjs": "x",
-    "bacon.jquery": "x",
     "sweet.js": "x",
     "dada-js": "x",
     "absurd": "x",
     "xtend": "x",
+    "signals": "x",
+    "hasher": "x",
+    "cspjs": "x",
     "bacon.query": "kristianmandrup/bacon.jquery#flexify"
   },
   "devDependencies": {

@@ -1,0 +1,77 @@
+{
+  "name": "dragonslayer",
+  "version": "0.0.1",
+  "description": "A modern frontend web framework based on mercury",
+  "keywords": [
+    "framework",
+    "frontend",
+    "virtual",
+    "react",
+    "modular",
+    "web",
+    "mercury"
+  ],
+  "author": "Kristian Mandrup <kmandrup@gmail.com>",
+  "repository": "git://github.com/kristianmandrup/dragonslayer.git",
+  "main": "index",
+  "homepage": "https://github.com/kristianmandrup/dragonslayer",
+  "contributors": [
+    {
+      "name": "Kristian Mandrup"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/kristianmandrup/dragonslayer/issues",
+    "email": "kmandrup@gmail.com"
+  },
+  "dependencies": {
+    "mercury": ">=8.0.0",
+    "mercury-jsxify": ">=0.13.0",
+    "crossroads": "x",
+    "baconjs": "x",
+    "bacon.jquery": "x",
+    "sweet.js": "x",
+    "dada-js": "x",
+    "xtend": "x"
+  },
+  "devDependencies": {
+    "mocha": "x",
+    "chai": "x"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/kristianmandrup/dragonslayer/raw/master/LICENSE"
+    }
+  ],
+  "scripts": {
+    "jshint": "jshint . --verbose",
+    "disc": "browserify index.js --full-paths | discify > disc.html && xdg-open disc.html",
+    "test": "node test/index.js | tap-spec",
+    "travis-test": "npm run phantom && npm run cover && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0) && zuul -- test/index.js",
+    "phantom": "run-browser test/index.js -b | tap-spec",
+    "browser": "run-browser test/index.js",
+    "cover": "istanbul cover --report html --print detail ./test/index.js",
+    "view-cover": "istanbul report html && google-chrome ./coverage/index.html",
+    "build": "node bin/build.js",
+    "examples": "node bin/example-server.js",
+    "dist": "node bin/dist.js",
+    "dist-publish": "npm run dist && git add dist/dragonslayer.js && git commit -m 'dist' && npm publish"
+  },
+  "testling": {
+    "files": "test/index.js",
+    "browsers": [
+      "ie/9..latest",
+      "firefox/26..latest",
+      "firefox/nightly",
+      "chrome/31..latest",
+      "chrome/canary",
+      "opera/18..latest",
+      "opera/next",
+      "safari/5.1..latest",
+      "ipad/6.0..latest",
+      "iphone/6.0..latest",
+      "android-browser/4.2..latest"
+    ]
+  }
+}

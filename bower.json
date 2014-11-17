@@ -18,6 +18,9 @@
     "mercury"
   ],
   "license": "MIT",
+  "devDependencies": {
+    "pocketgrid": "publicarray/pocketgrid"
+  },
   "ignore": [
     "**/.*",
     "node_modules",

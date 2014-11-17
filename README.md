@@ -1,16 +1,185 @@
 # Dragon Slayer
 
+A reactive framework that empower you to *slay Dragons* :)
+
+## Design philosophy
+
+The design is centered around a few simple, but powerful concepts:
+
+- Input
+- Model
+- Output
+
+- input can affect the model (app state)
+- model can cause side-effects in the form of output, such as UI updates
+
+
+
+### Input
+
+Any application input may affect the global model, either: directly or via a sub-state (lense)
+
+Inputs can come from sources such as:
+
+- Router (f.ex URL router - browser history stack)
+- User input from the UI (such as field input)
+- DataServices that:
+  - Subscribe to external data streams (f.ex via [SSE](http://en.wikipedia.org/wiki/Server-sent_events))
+  - Request external data given some action/event
+
+### Model
+
+The Model adheres to the following rules
+
+- all state is immutable
+- one global application state
+- sub-states are lenses which encapsulate local state but affect global state
+
+A single immutable application state allows for:
+
+- time travel (undo/redo)
+- versioning
+- conflict resolution using strategies such as Operational Transformation
+
+### Output
+
+Output is seen as any side effect that occurs when the model is updated (creates new state).
+An output can be thought of (and sometimes referred to) as a [sink](http://en.wikipedia.org/wiki/Sink_(computing))
+
+Outputs can affect targets such as:
+
+- browser history stack
+- UI updates
+- data written to external source:
+  - sub application
+  - local system (such as file system)
+  - remote system (via remote protocal such as HTTP POST/PUT)
+
+The rendering/templating system is simply an Output system.
+
+#### Rendering
+
+Rendering is done via `App.output`. It may cause whichever side-effect you desire, such as updating a [Document Object Model (DOM)](http://en.wikipedia.org/wiki/Document_Object_Model), a JSON model or writing to a log etc.
+
+For convenience you can split up rendering into multiple rendering Components that each control the rendering of a specific part (lense) of the state to be rendered. A Component can render to any number of sinks via an asynchronous pipeline (using [CspJS](https://github.com/srikumarks/cspjs) or a similar ...)
+
+### Nested Applications
+
+An application is nothing more than a single immutable state, input sources and output [sinks](http://en.wikipedia.org/wiki/Sink_(computing)).
+
+A sub application is simply a lense on the global model. Any change on the sub-app adheres to lense principles such that data changes may affect other models which the lense references.
+
+This simple principle makes it super easy to divide your application into sub-apps any way you like.
+Each sub-app can have their own router(s) which subscribe to the same events.
+
+### Router
+
+The Router is a composite which can take Routers and Routes as children.
+The Router can subscribe to router events resulting from:
+
+- browser history updates
+- side effects (output) to model updates
+- UI navigation events such as clicking on a link
+
+Traversing browser history may traverse state history such that we get a complete undo/redo "for free".
+Traversing state history directly will affect outputs only but may cause router side effects.
+
+### Operational Transformation
+
+We plan to support [Operational Transformation](http://en.wikipedia.org/wiki/Operational_transformation) via [ShareJS](http://sharejs.org/)
+
+[Operational Transformation](http://en.wikipedia.org/wiki/Operational_transformation) is a class of algorithms that do multi-site realtime concurrency. OT is like realtime git. It works with any amount of lag (from zero to an extended holiday). It lets users make live, concurrent edits with low bandwidth. OT gives you eventual consistency between multiple users without retries, without errors and without any data being overwritten.
 
 ### Mercury
 
-[mercury-jsxify]() will be used for generating the mercury virtual-dom from a pure txt based template.
-We might soon use an approach similar to msx-reader in order to enable sweet.js macros as well.
+#### Virtual DOM Rendering
+
+Mercury renders to a sink such as the DOM via a Virtual DOM (popularized by [React.js]()). This means
+that we can control what gets re-rendered for any state change, and only re-render parts of the sink that would be affected by that particular change. A sink effect can be described as one of the operations:
+
+- Create
+- Patch
+- Diff
+
+[mercury-jsxify](https://github.com/Raynos/mercury-jsxify) can be used as syntactic sugar to generate a virtual-dom from a pure txt based template. In the future we might also allow for an approach similar to [jsx-reader](https://github.com/jlongster/jsx-reader) so we can include [sweet.js](http://sweetjs.org/) macros into the mix :)
 
 ## UI layer
 
+The UI layer will be let you use [DadaJS](https://github.com/stockholmux/dada-js) for dynamic, javascript-empowered styling. Dada comes with nice DSL integration for [PocketGrid](http://arnaudleray.github.io/pocketgrid/) (grid layout)
+
 ### PocketGrid
 
-Will be used as grid system alongside Bootstrap or Foundation, is now available as bower install
+Can be used as a grid system alongside any other layout system you like, such as [Bootstrap](getbootstrap.com), [Foundation](http://foundation.zurb.com/) etc.
+
+### UI components
+
+We encourage the community to create small, reusable UI components for popular UI libraries.
+
+UI component sets
+
+- [React Bootstrap](http://react-bootstrap.github.io/) - [repo](https://github.com/react-bootstrap/react-bootstrap/)
+
+You can distribute components either individually or into logically grouped sets. We encourage smaller modules so it allows developers to pick and choose.
+
+### Example UI component
+
+[Badge](https://github.com/react-bootstrap/react-bootstrap/blob/master/src/Badge.jsx) could be implemented something like this...
+
+Note: The fine details of this API is still a WIP.
+
+```js
+var Component = require('dragon-slayer/component');
+var joinClasses = require('./utils/joinClasses');
+var ValidComponentChildren = require('./utils/ValidComponentChildren');
+var classSet = require('./utils/classSet');
+
+// these two helpers should also be externalized as utils
+var isString(children) => {
+  return typeof children === 'string'
+}
+
+var validComponent(children) => {
+  return ValidComponentChildren.hasValidComponent(children);
+}
+
+class BadgeComponent extends Component
+  // TODO: somehow state.props will be populated with list of children!?
+  state: {
+    props: {
+      pullRight: false  
+    }
+  },
+
+  // made available inside render in r. scope
+  helpers: class Helpers {
+    get isBadge {
+      var children = @state.children;
+      return isString(children) || validComponent(children)
+    }
+
+    get className {
+      return joinClasses(@state.className, classSet(@classes))
+    }
+
+    get classes {
+      'pull-right': @state.pullRight,
+      'badge': @isBadge
+    }
+  }
+
+  render: function () {
+    return (
+      <span
+        {@props}
+        className={@r.className}>
+        {@props.children}
+      />
+    );
+  }
+});
+
+export default BadgeComponent;
+```
 
 ### DadaJS
 

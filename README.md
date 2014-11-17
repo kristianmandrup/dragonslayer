@@ -159,24 +159,71 @@ class BadgeComponent extends Component
     }
   }
 
-  // props directly reference state.props
+  // asynchronously renders for each key registered
+  // @props directly references @state.props of component
   // any access will first try to find method in state scope,
   // then will fallback to look in render helpers scope (so @r. is not required)
-  render: function () {
-    return (
-      <span
-        {@props}
-        className={@r.classes}>
-        {@props.children}
-      />
-    );
+  render: {
+    dom: {
+      options: // by convention uses App.render.config.dom by default
+      build: function() {
+        // jsx:dom
+        <span
+          {@props}
+          className={@r.classes}>
+          {@props.children}
+        />
+        );
+      }
+    },
+    log: {
+      ...
+    },
+    json: {
+      options: App.render.config.customJson,
+      build: function() {
+        return ...
+      },
+      emit: function() {
+        // write to file
+      }
+    }
   }
 });
 
 export default BadgeComponent;
 ```
 
-and here the reusable Helpers...
+We can globally define our render options for various render targets
+
+```js
+class Render
+  config: {
+    dom: function() {
+      return {
+        document: App.dom.document,
+        operations: {
+          create: function() { ... }
+          patch:  function() { ... }
+        }
+      }
+    },
+    json: {
+      document: {},
+      operations: {
+        create:
+        patch:
+      }
+
+    },
+    canvas: ...
+  }
+}
+
+export default Render;
+```
+
+Here some reusable Component Helpers ...
 
 ```js
 class BaseHelpers {
@@ -188,6 +235,7 @@ class BaseHelpers {
   get className {
     return joinClasses(@state.className, classSet(@classes))
   }  
+  ...
 }
 
 export default BaseHelpers;

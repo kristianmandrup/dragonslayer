@@ -40,7 +40,9 @@
   },
   "devDependencies": {
     "mocha": "x",
-    "chai": "x"
+    "chai": "x",
+    "jspm": "x",
+    "ender": "x"
   },
   "licenses": [
     {

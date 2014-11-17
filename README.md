@@ -2,7 +2,7 @@
 
 A reactive framework that empowers you to *slay Dragons* :)
 
-![](./public/img/dragonslayer.jpg =306x234)
+![Dragon Slayer](../blob/master/public/img/dragonslayer.jpg?raw=true)
 
 ## Design philosophy
 

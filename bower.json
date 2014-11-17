@@ -1,0 +1,28 @@
+{
+  "name": "dragon-slayer",
+  "version": "0.0.1",
+  "homepage": "https://github.com/kristianmandrup/dragonslayer",
+  "authors": [
+    "Kristian Mandrup <kmandrup@gmail.com>"
+  ],
+  "description": "modern frontend web framework based on mercury",
+  "main": "dist/dragonslayer.js",
+  "moduleType": [
+    "es6"
+  ],
+  "keywords": [
+    "dragon",
+    "frontend",
+    "framework",
+    "web",
+    "mercury"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

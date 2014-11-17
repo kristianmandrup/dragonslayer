@@ -36,7 +36,7 @@
     "signals": "x",
     "hasher": "x",
     "cspjs": "x",
-    "bacon.query": "kristianmandrup/bacon.jquery#flexify"
+    "bacon-dom": "kristianmandrup/bacon.jquery#flexify"
   },
   "devDependencies": {
     "mocha": "x",

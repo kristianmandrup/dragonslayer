@@ -139,16 +139,10 @@ var Component = require('dragon-slayer/component');
 var joinClasses = require('./utils/joinClasses');
 var ValidComponentChildren = require('./utils/ValidComponentChildren');
 var classSet = require('./utils/classSet');
+var isString = require('...');
+var validComponent = require('...');
 
-// these two helpers should also be externalized as utils
-var isString(children) => {
-  return typeof children === 'string'
-}
-
-var validComponent(children) => {
-  return ValidComponentChildren.hasValidComponent(children);
-}
-
+// Note: This is "pseudo" syntax, (which could be) enabled via sweet.js macros
 class BadgeComponent extends Component
   // TODO: somehow state.props will be populated with list of children!?
   state: {
@@ -158,27 +152,21 @@ class BadgeComponent extends Component
   },
 
   // made available inside render in r. scope
-  helpers: class Helpers {
-    get isBadge {
-      var children = @state.children;
-      return isString(children) || validComponent(children)
-    }
-
-    get className {
-      return joinClasses(@state.className, classSet(@classes))
-    }
-
+  helpers: class Helpers extends BaseHelpers {
     get classes {
       'pull-right': @state.pullRight,
-      'badge': @isBadge
+      'badge': @validChildren
     }
   }
 
+  // props directly reference state.props
+  // any access will first try to find method in state scope,
+  // then will fallback to look in render helpers scope (so @r. is not required)
   render: function () {
     return (
       <span
         {@props}
-        className={@r.className}>
+        className={@r.classes}>
         {@props.children}
       />
     );
@@ -186,6 +174,23 @@ class BadgeComponent extends Component
 });
 
 export default BadgeComponent;
+```
+
+and here the reusable Helpers...
+
+```js
+class BaseHelpers {
+  get validChildren {
+    var children = @state.children;
+    return isString(children) || validComponent(children)
+  }
+
+  get className {
+    return joinClasses(@state.className, classSet(@classes))
+  }  
+}
+
+export default BaseHelpers;
 ```
 
 ### DadaJS
@@ -254,6 +259,6 @@ The Bacon Ajax and Promise APIs can be used with Data services.
 
 [Gobble](https://github.com/gobblejs/gobble) is used as the main build tool.
 
-### Pckage managers
+### Package managers
 
 [Ender](enderjs.com) is used as a toolkit and for installing various packages in different formats. [JSPM](http://jspm.io/) is used to install and consume various package formats as ES6 modules.

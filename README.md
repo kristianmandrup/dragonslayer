@@ -72,3 +72,12 @@ The Bacon Ajax and Promise APIs can be used with Data services.
 ## CSP
 
 [CspJS](https://github.com/srikumarks/cspjs) will be the main Async framework. It is a much nicer API for dealing with Async flows, even better than promises. We will likely also use the new ES6 generators.
+
+
+## Dev tools
+
+[Gobble](https://github.com/gobblejs/gobble) is used as the main build tool.
+
+### Pckage managers
+
+[Ender](enderjs.com) is used as a toolkit and for installing various packages in different formats. [JSPM](http://jspm.io/) is used to install and consume various package formats as ES6 modules.

@@ -39,10 +39,11 @@
     "bacon-dom": "kristianmandrup/bacon.jquery#flexify"
   },
   "devDependencies": {
-    "mocha": "x",
     "chai": "x",
+    "ender": "x",
+    "gobble": "^0.6.10",
     "jspm": "x",
-    "ender": "x"
+    "mocha": "x"
   },
   "licenses": [
     {

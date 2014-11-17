@@ -1,6 +1,8 @@
 # Dragon Slayer
 
-A reactive framework that empower you to *slay Dragons* :)
+A reactive framework that empowers you to *slay Dragons* :)
+
+![](./public/img/dragonslayer.jpg =306x234)
 
 ## Design philosophy
 

@@ -10,10 +10,15 @@ The design is centered around a few simple, but powerful concepts:
 - Model
 - Output
 
+Data flow is always uni-directional. No explicit two-way binding internally in the app.
+We only allow for two-way bindings inside `Services` which communicate with external systems over some  2-way sync protocols (pub/sub, sockets etc.).
+
 - input can affect the model (app state)
 - model can cause side-effects in the form of output, such as UI updates
 
+The general philosophy is outlined pretty well by [@Raynos](https://twitter.com/Raynos) in this [video](https://www.youtube.com/watch?v=RLAjMeR8898)
 
+We also try to adhere to and encourage the use of small modules that can be swapped out and customized as you like. A flexible architecture is one of the goals. No "vendor lockin" here!
 
 ### Input
 

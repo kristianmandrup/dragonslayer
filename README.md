@@ -4,6 +4,15 @@ A reactive framework that empowers you to *slay Dragons* :)
 
 ![Dragon Slayer](../master/public/img/dragonslayer.jpg?raw=true)
 
+## Architecture
+
+Dragon slayer is designed to be a minimalistic and extensible client/server web framework
+
+The main file `lib/dragonslayer.js` sets up a basic reference API which you can change to your
+liking:
+
+class Dragon {
+
 ## Design philosophy
 
 The design is centered around a few simple, but powerful concepts:
@@ -301,6 +310,15 @@ The Bacon Ajax and Promise APIs can be used with Data services.
 ## CSP
 
 [CspJS](https://github.com/srikumarks/cspjs) will be the main Async framework. It is a much nicer API for dealing with Async flows, even better than promises. We will likely also use the new ES6 generators.
+
+
+## Utils
+
+Various utility packages used...
+
+### Metadata
+
+This framework uses [flow.js](http://flowtype.org/) for optional type checking...
 
 
 ## Dev tools

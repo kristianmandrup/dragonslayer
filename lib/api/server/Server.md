@@ -2,7 +2,7 @@
 
 The server part of Dragon slayer uses many of the same design philosophies.
 
-### Server Side Events
+### Server Side Events (SSE)
 
 We highly encourage unifying the interface to external data/service providers, such as through various external APIs and protocols.
 

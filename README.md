@@ -146,7 +146,7 @@ Slayer.Damage (output):
 - Beast.Attack (attack events to output)
 
 *Demon*
-Beast.Damage (beast attacks Demon)
+Demon.Damage (beast attacks Demon)
 
 A `Demon` acts as an intermediary between the application and external systems.
 The Demon should use adapters to interact with external systems. We recommend using SSE for most remote protocols such as REST, sockets and file system watch/change events.

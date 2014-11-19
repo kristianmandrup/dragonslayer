@@ -69,15 +69,39 @@ Outputs can affect targets such as:
 - data written to external source:
   - sub application
   - local system (such as file system)
-  - remote system (via remote protocal such as HTTP POST/PUT)
+  - remote system (via remote protocol such as HTTP POST/PUT)
 
 The rendering/templating system is simply an Output system.
 
+## Slayer API and naming
+
+The Slayer API is built by referencing the main API. This makes it completely detached and independent. This allows you to easily substitute any part of the API with your own custom solution.
+
+The standard setup provides an API such as `dragon.armor` which includes the Security API.
+You can define your own API like this:
+
+TODO: show example of custom API!
+
+### Injection via macros
+
+Still under consideration. Would be nice to use a macro syntax similar to AtScript for Angular 2, but then again, perhaps no need for this if we just hide imp. details under a nice API.
+
+```js
+// @Inject Slayer as slayer
+// @Inject Config as config
+class Beast {
+  constructor(opts = {}) {
+  }
+}
+```
+
 #### Rendering
 
-Rendering is done via `App.output`. It may cause whichever side-effect you desire, such as updating a [Document Object Model (DOM)](http://en.wikipedia.org/wiki/Document_Object_Model), a JSON model or writing to a log etc.
+Rendering can done as a side-effect of the `Output` layer. Output may cause whichever side-effect you desire, such as updating a [Document Object Model (DOM)](http://en.wikipedia.org/wiki/Document_Object_Model), a JSON model, sending updates to external services, writing to a log etc.
 
 For convenience you can split up rendering into multiple rendering Components that each control the rendering of a specific part (lense) of the state to be rendered. A Component can render to any number of sinks via an asynchronous pipeline (using [CspJS](https://github.com/srikumarks/cspjs) or a similar ...)
+
+Rendering can be done both on the front-end (browser DOM updates) and on the server (such as static site rendering for Search engine optimization, snapshots etc.)
 
 ### Nested Applications
 
@@ -100,13 +124,24 @@ The Router can subscribe to router events resulting from:
 Traversing browser history may traverse state history such that we get a complete undo/redo "for free".
 Traversing state history directly will affect outputs only but may cause router side effects.
 
+We are currently developing a
+[new Crossroads router](https://github.com/kristianmandrup/crossroads.js/tree/dev)...
+
+We also include a Mini router as part of Dragon-slayer, based on a @Raynos implementation (from a gist of his). The idea is that you can use Routers anywhere you like in your architecture (where it makes sense) and depending on the context you should pick and choose the router which fits.
+
+A common App architecture would likely be to use an advanced router for the general App "structure/layout" and then use mini-routers in components/views/widgets that need routing (for speed).
+
+The Crossroads router being developed will be very modular, so that you can compose the router from various self-contained APIs to compose a router with just the level of complexity/functionality that you need...
+
 ### Operational Transformation
 
-We plan to support [Operational Transformation](http://en.wikipedia.org/wiki/Operational_transformation) via [ShareJS](http://sharejs.org/)
+We plan to support [Operational Transformation](http://en.wikipedia.org/wiki/Operational_transformation) via [ShareJS](http://sharejs.org/) in the future... please join in on this effort!!
 
 [Operational Transformation](http://en.wikipedia.org/wiki/Operational_transformation) is a class of algorithms that do multi-site realtime concurrency. OT is like realtime git. It works with any amount of lag (from zero to an extended holiday). It lets users make live, concurrent edits with low bandwidth. OT gives you eventual consistency between multiple users without retries, without errors and without any data being overwritten.
 
 ### Mercury
+
+We are basing the View and Model layers on [Mercury.js](https://github.com/Raynos/mercury)
 
 #### Virtual DOM Rendering
 
@@ -118,6 +153,8 @@ that we can control what gets re-rendered for any state change, and only re-rend
 - Diff
 
 [mercury-jsxify](https://github.com/Raynos/mercury-jsxify) can be used as syntactic sugar to generate a virtual-dom from a pure txt based template. In the future we might also allow for an approach similar to [jsx-reader](https://github.com/jlongster/jsx-reader) so we can include [sweet.js](http://sweetjs.org/) macros into the mix :)
+
+See the [Mercury FAQ](https://github.com/Raynos/mercury/blob/master/docs/faq.md) for more details on how to leverage its awesome power!!
 
 ## UI layer
 

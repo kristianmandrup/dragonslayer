@@ -124,7 +124,11 @@ Slayer:
 - damage (incoming changes to model)
 - strike (outgoing changes to affect: UI and external services)
 
-TODO: Show diagram(s)
+### Architecture diagram
+
+![Dragon Slayer Architecture](../master/public/img/Dragon-slayer-architecture.png?raw=true)
+
+A very lean, clean and flexible architecture indeed :)
 
 #### Rendering
 

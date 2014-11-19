@@ -203,6 +203,21 @@ We plan to support [Operational Transformation](http://en.wikipedia.org/wiki/Ope
 
 [Operational Transformation](http://en.wikipedia.org/wiki/Operational_transformation) is a class of algorithms that do multi-site realtime concurrency. OT is like realtime git. It works with any amount of lag (from zero to an extended holiday). It lets users make live, concurrent edits with low bandwidth. OT gives you eventual consistency between multiple users without retries, without errors and without any data being overwritten.
 
+## Body (data)
+
+Any body in the system can wear layers of armor (security layers) to protect itself from damage (changes). A body can be physical or virtual (ethereal). A physical body is one where data is right there to be affected. A virtual body is a set of one or more events/signals that may affect a remote body.
+In some cases, such as routing, we may wish to protect against even issuing those events (attacks), in effect we set up some defensive blocks (guards) from the attacks themselves. The body may then have its own armor which the attacks must penetrate later...
+
+### Authorization
+
+We encourage using whichever security layer/system fits any particular body (or body part - lense) of the application. Authorization will by default be based on  [permit-authorize](https://github.com/kristianmandrup/permit-authorize) but you should be able to easily configure or substitute with your own solution when and where you like ;)
+
+Permit authorize is about to undergo some major refactoring to split it into several smaller modules that can be composed to form as complex or simple an authorization framework as you like...
+
+For client-side OAuth2 Authentication we will likely use [Hello.js](http://adodson.com/hello.js/#quick-start). It looks like a very popular [github repo](https://github.com/MrSwitch/hello.js)
+
+For Node server side Authentication, we will likely be using [Passport.js](http://passportjs.org/) or one of these [auth alternatives](https://nodejsmodules.org/tags/authorization), the most popular is [everyauth](https://github.com/bnoguchi/everyauth/) and looks pretty stable and supports a ton of different auth strategies!!
+
 ### Mercury
 
 We are basing the View and Model layers on [Mercury.js](https://github.com/Raynos/mercury) by default, but you are free to substitute these layers to the extend that you like as well ;)
@@ -253,119 +268,6 @@ Examples of Reactive UI component sets:
 
 You can distribute components either individually or into logically grouped sets. We encourage smaller modules so it allows developers to pick and choose.
 
-### Example UI component
-
-[Bootstrap Badge](https://github.com/react-bootstrap/react-bootstrap/blob/master/src/Badge.jsx) could be implemented something like this...
-
-Note: The fine details of this API is still a WIP.
-
-```js
-var Component = require('dragon-slayer/component');
-var joinClasses = require('./utils/joinClasses');
-var ValidComponentChildren = require('./utils/ValidComponentChildren');
-var classSet = require('./utils/classSet');
-var isString = require('...');
-var validComponent = require('...');
-
-// Note: This is "pseudo" syntax, (which could be) enabled via sweet.js macros
-class BadgeComponent extends Component
-  // TODO: somehow state.props will be populated with list of children!?
-  state: {
-    props: {
-      pullRight: false  
-    }
-  },
-
-  // made available inside render in r. scope
-  helpers: class Helpers extends BaseHelpers {
-    get classes {
-      'pull-right': @state.pullRight,
-      'badge': @validChildren
-    }
-  }
-
-  // asynchronously renders for each key registered
-  // @props directly references @state.props of component
-  // any access will first try to find method in state scope,
-  // then will fallback to look in render helpers scope (so @r. is not required)
-  render: {
-    dom: {
-      options: // by convention uses App.render.config.dom by default
-      build: function() {
-        // jsx:dom
-        <span
-          {@props}
-          className={@r.classes}>
-          {@props.children}
-        />
-        );
-      }
-    },
-    log: {
-      ...
-    },
-    json: {
-      options: App.render.config.customJson,
-      build: function() {
-        return ...
-      },
-      emit: function() {
-        // write to file
-      }
-    }
-  }
-});
-
-export default BadgeComponent;
-```
-
-We can globally define our render options for various render targets
-
-```js
-class Render
-  config: {
-    dom: function() {
-      return {
-        document: App.dom.document,
-        operations: {
-          create: function() { ... }
-          patch:  function() { ... }
-        }
-      }
-    },
-    json: {
-      document: {},
-      operations: {
-        create:
-        patch:
-      }
-
-    },
-    canvas: ...
-  }
-}
-
-export default Render;
-```
-
-Here some reusable Component Helpers ...
-
-```js
-class BaseHelpers {
-  get validChildren {
-    var children = @state.children;
-    return isString(children) || validComponent(children)
-  }
-
-  get className {
-    return joinClasses(@state.className, classSet(@classes))
-  }  
-  ...
-}
-
-export default BaseHelpers;
-```
-
 ### DadaJS
 
 Dynamic CSS via javascript built on top of [AbsurdJS](http://absurdjs.com/).
@@ -396,13 +298,18 @@ Note: If you really want, you can combine the approaches!!
 
 ### Data layer
 
+*Deprecated: See diagrams*
+
 The Data layer contains all entities which affect the Application state (model).
+
+In "Dragon speak", the Data layer is known as the `Body`, such as `Slayer.Body`
+
 These can generally be divided into
 
 - Routers (such as URL/history router)
 - Data Services (that stream data into the model from some source)
 
-## Crossroads
+## Crossroads Router
 
 [Crossroads](http://millermedeiros.github.io/crossroads.js/) is the default router.
 It is very flexible indeed :) We will use it together with [Hasher](https://github.com/millermedeiros/hasher/) and [SignalJS](http://millermedeiros.github.io/js-signals/)
@@ -432,14 +339,14 @@ The Bacon Ajax and Promise APIs can be used with Data services.
 
 Various utility packages used...
 
-### Metadata
+### Metadata, Annotations & Optional/Dynamic Type checking
 
-This framework uses [flow.js](http://flowtype.org/) for optional type checking...
-
+This framework might make use of [flow.js](http://flowtype.org/) for optional type checking, but there
+are also many other options...
 
 ## Dev tools
 
-[Gobble](https://github.com/gobblejs/gobble) is used as the main build tool.
+[Gobble](https://github.com/gobblejs/gobble) will be used as the main build tool.
 
 ### Package managers
 

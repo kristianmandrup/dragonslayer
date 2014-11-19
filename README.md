@@ -4,16 +4,25 @@ A reactive framework that empowers you to *slay Dragons* :)
 
 ![Dragon Slayer](../master/public/img/dragonslayer.jpg?raw=true)
 
-## Architecture
+## Architecture outline
 
 Dragon slayer is designed to be a minimalistic and extensible client/server web framework
 
-The main file `lib/dragonslayer.js` sets up a basic reference API which you can change to your
-liking:
+The main file `lib/dragonslayer.js` sets up a basic "reference API" which you can customize to your
+liking (see Slayer API below).
 
-class Dragon {
+You can see this as conceptually a layered API, where you design your public API by referencing an underlying core API.
 
-## Design philosophy
+## Core API
+
+The Core API consists of:
+
+- core
+- client
+- server
+- app
+
+### Design philosophy
 
 The design is centered around a few simple, but powerful concepts:
 
@@ -73,15 +82,6 @@ Outputs can affect targets such as:
 
 The rendering/templating system is simply an Output system.
 
-## Slayer API and naming
-
-The Slayer API is built by referencing the main API. This makes it completely detached and independent. This allows you to easily substitute any part of the API with your own custom solution.
-
-The standard setup provides an API such as `dragon.armor` which includes the Security API.
-You can define your own API like this:
-
-TODO: show example of custom API!
-
 ### Injection via macros
 
 Still under consideration. Would be nice to use a macro syntax similar to AtScript for Angular 2, but then again, perhaps no need for this if we just hide imp. details under a nice API.
@@ -100,35 +100,64 @@ class Beast {
 }
 ```
 
+### Core Architecture
+
+![Core Architecture](../master/public/img/Core-architecture.png?raw=true)
+
+A very lean, clean and flexible architecture indeed :)
+
+## Slayer API
+
+The Slayer API is built by referencing the main API described above. This makes the slayer API completely detached and independent of the underlying API which allows you to easily substitute any part of the API with your own custom solutions.
+
+The standard setup provides an API such as `dragon.armor`, which references the underlying Security API, but you can easily change the reference to point to another Security API or change parts of the API, such as Authorization via `dragon.armor.helmet`.
+
 For fun and the heck of it (we all like Fantasy right?) we have decided to have the default Dragon Slayer API use concepts such as:
 
 - Slayer : model layer
-- Beast : output layer
+- Beast  : output layer
 - Damage : input layer
 
 The idea is that the Slayer (model) is at the centre of the app. When the slayers is struck by the beast (incoming data), which passes through the armor (security layer, auth) his/her body (model) is set to a new state (damage). The slayer then strikes back at the beast (output), using the model changes (weapons).
 
-Input:
+Body (model):
+- armor (layers of armor: authentication, authorization, validation, ...)
+
+Every creature (demon, beast, slayer) has a body which wraps its model (state).
+Any body can wear one or more layers of armor which any attack must pass through to affect the body (ie. model state).
+
+*Demon*
+Demon.Attack (Demon attacks Beast)
+
+*Beast*
+Slayer.Attack (input):
 - claw (ui events)
 - tail (route changes)
-- breath (incoming streamed data)
+- breath (incoming data stream)
 
-Output:
-- slash (ui update)
-- swipe (route change)
-- blow (outgoing data streams)
+Slayer.Damage (output):
+- hit (ui update)
+- swing (route change)
+- blow (outgoing data stream)
 
-Slayer:
-- body (app model state)
-- armor (security and auth)
-- damage (incoming changes to model)
-- strike (outgoing changes to affect: UI and external services)
+*Slayer*
+- Body (model with armor)
+- Beast.Damage (damage events to body)
+- Beast.Attack (attack events to output)
 
-### Architecture diagram
+*Demon*
+Beast.Damage (beast attacks Demon)
 
-![Dragon Slayer Architecture](../master/public/img/Dragon-slayer-architecture.png?raw=true)
+A `Demon` acts as an intermediary between the application and external systems.
+The Demon should use adapters to interact with external systems. We recommend using SSE for most remote protocols such as REST, sockets and file system watch/change events.
 
-A very lean, clean and flexible architecture indeed :)
+Demons may also directly read/write from file system or load/store from a database, especially for configuration purposes as the app is booted. When the app is running, it should avoid any blocking IO operations!
+
+### Dragon Slayer Architecture
+
+![Dragon Slayer Architecture](../master/public/img/DragonSlayer-API-architecture.png?raw=true)
+
+Using a vocabulary of attack, body and damage between different creatures should make the interactions much clearer. You are welcome to invent your own vocabulary for your own custom API. This one is just for inspiration and provide some ideas... Be creative!!
 
 #### Rendering
 

@@ -86,7 +86,12 @@ TODO: show example of custom API!
 
 Still under consideration. Would be nice to use a macro syntax similar to AtScript for Angular 2, but then again, perhaps no need for this if we just hide imp. details under a nice API.
 
+This is done by importing from a base layer with boring names such as `Model` and then renaming in the new context and injecting the pieces to form a (your) custom API.
+
 ```js
+Import Model as Slayer from './model'
+Import Config from '../config'
+
 // @Inject Slayer as slayer
 // @Inject Config as config
 class Beast {
@@ -94,6 +99,32 @@ class Beast {
   }
 }
 ```
+
+For fun and the heck of it (we all like Fantasy right?) we have decided to have the default Dragon Slayer API use concepts such as:
+
+- Slayer : model layer
+- Beast : output layer
+- Damage : input layer
+
+The idea is that the Slayer (model) is at the centre of the app. When the slayers is struck by the beast (incoming data), which passes through the armor (security layer, auth) his/her body (model) is set to a new state (damage). The slayer then strikes back at the beast (output), using the model changes (weapons).
+
+Input:
+- claw (ui events)
+- tail (route changes)
+- breath (incoming streamed data)
+
+Output:
+- slash (ui update)
+- swipe (route change)
+- blow (outgoing data streams)
+
+Slayer:
+- body (app model state)
+- armor (security and auth)
+- damage (incoming changes to model)
+- strike (outgoing changes to affect: UI and external services)
+
+TODO: Show diagram(s)
 
 #### Rendering
 
@@ -141,7 +172,7 @@ We plan to support [Operational Transformation](http://en.wikipedia.org/wiki/Ope
 
 ### Mercury
 
-We are basing the View and Model layers on [Mercury.js](https://github.com/Raynos/mercury)
+We are basing the View and Model layers on [Mercury.js](https://github.com/Raynos/mercury) by default, but you are free to substitute these layers to the extend that you like as well ;)
 
 #### Virtual DOM Rendering
 
@@ -156,9 +187,24 @@ that we can control what gets re-rendered for any state change, and only re-rend
 
 See the [Mercury FAQ](https://github.com/Raynos/mercury/blob/master/docs/faq.md) for more details on how to leverage its awesome power!!
 
-## UI layer
+## UI Render layer
 
-The UI layer will be let you use [DadaJS](https://github.com/stockholmux/dada-js) for dynamic, javascript-empowered styling. Dada comes with nice DSL integration for [PocketGrid](http://arnaudleray.github.io/pocketgrid/) (grid layout)
+The UI rendering layer can render to multiple different types of UI:
+
+- DOM API
+- Canvas API
+- Famo.us API
+- ...
+
+The view layer can even be set up to asynchronously render to multiple target view layers!!
+
+### DOM rendering
+
+The DOM render layer will let you use [DadaJS](https://github.com/stockholmux/dada-js) for dynamic, javascript-empowered styling. Dada comes with nice DSL integration for [PocketGrid](http://arnaudleray.github.io/pocketgrid/) (grid layout)
+
+You can use whatever View/Component technology you want on a per-component basis. For a complex app, it might make sense to have some less complex but DOM intensive sections render super fast using a framework like Mithril while other sections may benefit from leveraging Mercury components etc.
+
+We will try to provide a consistent "framing" (APIs) for you to fill in the full "picture" ;)
 
 ### PocketGrid
 
@@ -168,7 +214,7 @@ Can be used as a grid system alongside any other layout system you like, such as
 
 We encourage the community to create small, reusable UI components for popular UI libraries.
 
-UI component sets
+Examples of Reactive UI component sets:
 
 - [React Bootstrap](http://react-bootstrap.github.io/) - [repo](https://github.com/react-bootstrap/react-bootstrap/)
 
@@ -176,7 +222,7 @@ You can distribute components either individually or into logically grouped sets
 
 ### Example UI component
 
-[Badge](https://github.com/react-bootstrap/react-bootstrap/blob/master/src/Badge.jsx) could be implemented something like this...
+[Bootstrap Badge](https://github.com/react-bootstrap/react-bootstrap/blob/master/src/Badge.jsx) could be implemented something like this...
 
 Note: The fine details of this API is still a WIP.
 

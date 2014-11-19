@@ -126,32 +126,46 @@ Body (model):
 Every creature (demon, beast, slayer) has a body which wraps its model (state).
 Any body can wear one or more layers of armor which any attack must pass through to affect the body (ie. model state).
 
-*Demon*
-Demon.Attack (Demon attacks Beast)
+### Client
 
 *Beast*
-Slayer.Attack (input):
-- claw (ui events)
-- tail (route changes)
-- breath (incoming data stream)
+- `Beast.Attack` (Input):
+  - claw - ui action events (field input, click, mouse, keyboard, ...)
+  - tail - route change (f.ex from anchor click or url change)
+  - breath - incoming data stream (data service)
 
-Slayer.Damage (output):
-- hit (ui update)
-- swing (route change)
-- blow (outgoing data stream)
+- `Beast.Damage` (Output):
+  - hit - ui update events
+  - swing - route events
+  - blow - outgoing data stream (data service)
 
-*Slayer*
-- Body (model with armor)
-- Beast.Damage (damage events to body)
-- Beast.Attack (attack events to output)
+*Slayer* (Model)
+- `Slayer.Body` - body with armor
+- `Slayer.Damage` - damage events received to body
+- `Slayer.Attack` - attack events sent to beast
 
-*Demon*
-Demon.Damage (beast attacks Demon)
+*Demon* (Data service)
+- `Demon.Attack` - attack events sent to ghost
+- `Demon.Damage` - damage events received from ghost, affecting body
 
 A `Demon` acts as an intermediary between the application and external systems.
 The Demon should use adapters to interact with external systems. We recommend using SSE for most remote protocols such as REST, sockets and file system watch/change events.
 
 Demons may also directly read/write from file system or load/store from a database, especially for configuration purposes as the app is booted. When the app is running, it should avoid any blocking IO operations!
+
+Client side Data adapters (Demons) subscribe on app server channels to send/receive SSEs that encapsulate incoming/outgoing data streams
+
+### Server
+
+The Server has a `Ghost` (with Server Data services) which creates and maintains data channels for Demons to subscribe to.
+
+These SSE channels unify and abstract away the complexity of communicating with external systems via various different protocols
+
+SSE adapters for external systems
+- Input service (incoming data: real time sync & requested)
+- Output service (outgoing data: real time sync & posted)
+
+We will likely use [Restangular](https://github.com/mgonto/restangular/compare/2.0-wip) (without the small Angular facade) to communicate with REST APIs
 
 ### Dragon Slayer Architecture
 

@@ -173,6 +173,64 @@ We will likely use [Restangular](https://github.com/mgonto/restangular/compare/2
 
 Using a vocabulary of attack, body and damage between different creatures should make the interactions much clearer. You are welcome to invent your own vocabulary for your own custom API. This one is just for inspiration and provide some ideas... Be creative!!
 
+### Decoupled infrastructure
+
+If you look at the Dragonslayer README you will get a good sense of the proposed infrastructure.
+As you can see, the Router is designed to be completely decoupled from the rest of the system,
+Only aware of some incoming request that needs to be parsed and only interacts with the outside by dispatching some kind of events (which can be customized).
+
+The rest of the infrastructure should be designed along similar lines, using a Connector infrastructure, by default using [Signals.js](https://github.com/millermedeiros/js-signals).
+
+Every infrastructure "component" should be decoupled and only interact with other infrastructure components by subscribing to and publishing events via these Connectors.
+
+### Decoupled rendering
+
+If we look at the recently popular React.js rendering infrastructure, we notice that the rendering is tightly coupled to DOM rendering. Same goes for Mercury.js which uses an independent [Virtual DOM library](https://github.com/Raynos/virtual-dom).
+
+This VDOM library still expects to be passed a document, a render operation and an options hash with create, patch and diff operations to be performed on the document.
+
+We should instead have the VDOM simply dispatch events for create, patch and diff passing along information about the virtual element, ie. `dispatch('create', vnode)`.
+
+Then we could have Output components listen to such events and take full charge of rendering where it belongs (a system output effect).
+
+I plan to redesign the Virtual DOM layer along these lines...
+
+### App Model/State layer
+
+The App model should capture both persistent model data and transient application state and avoid mixing them.
+
+We could have the Full app state modelled as follows:
+
+```js
+App.globalModel = {
+  transient: {...}
+  model: { ...}
+}
+```
+
+Any persistent state goes in `App.state.model` whereas all transient state is stored in `App.state.transient`.
+
+To ensure encapsulation and information hiding, we should hide this behind a Facade API:
+Any state mutation will create a new global state and trigger observers all the way up the parent hierarchy for lenses to be notified and update locally.
+
+Get Post with id==32
+
+```js
+App.model('posts', 32).set(myPost)
+```
+
+Get Post with id==32 and set to myPost
+
+```js
+App.model('posts', 32).set(myPost)
+```
+
+Go one step back in App history
+
+```js
+App.state('route').set(App.history.pop())
+```
+
 #### Rendering
 
 Rendering can done as a side-effect of the `Output` layer. Output may cause whichever side-effect you desire, such as updating a [Document Object Model (DOM)](http://en.wikipedia.org/wiki/Document_Object_Model), a JSON model, sending updates to external services, writing to a log etc.
@@ -228,9 +286,13 @@ We encourage using whichever security layer/system fits any particular body (or 
 
 Permit authorize is about to undergo some major refactoring to split it into several smaller modules that can be composed to form as complex or simple an authorization framework as you like...
 
+### Authentication
+
 For client-side OAuth2 Authentication we will likely use [Hello.js](http://adodson.com/hello.js/#quick-start). It looks like a very popular [github repo](https://github.com/MrSwitch/hello.js)
 
 For Node server side Authentication, we will likely be using [Passport.js](http://passportjs.org/) or one of these [auth alternatives](https://nodejsmodules.org/tags/authorization), the most popular is [everyauth](https://github.com/bnoguchi/everyauth/) and looks pretty stable and supports a ton of different auth strategies!!
+
+For the client wew will use JWT authenticated, as described in this [egghead.io screencast](https://egghead.io/lessons/angularjs-basic-server-setup-for-jwt-authentication)
 
 ### Mercury
 
@@ -238,16 +300,17 @@ We are basing the View and Model layers on [Mercury.js](https://github.com/Rayno
 
 #### Virtual DOM Rendering
 
-Mercury renders to a sink such as the DOM via a Virtual DOM (popularized by [React.js]()). This means
-that we can control what gets re-rendered for any state change, and only re-render parts of the sink that would be affected by that particular change. A sink effect can be described as one of the operations:
+Mercury renders to a sink such as the DOM via a Virtual DOM, popularized by Facebook's [React.js](https://github.com/facebook/react) framework.
+A good overview of React can be found [here](http://scotch.io/tutorials/javascript/learning-react-getting-started-and-concepts)
 
-- Create
-- Patch
-- Diff
+Using a reactive paradigm we can control what gets re-rendered for any state change, and only re-render parts of the sink (UI) that would be affected by that particular change. A sink effect can be described as one of the operations *Create* and *Patch*, by examining the difference between current and last state, using a *Diff*.
 
 [mercury-jsxify](https://github.com/Raynos/mercury-jsxify) can be used as syntactic sugar to generate a virtual-dom from a pure txt based template. In the future we might also allow for an approach similar to [jsx-reader](https://github.com/jlongster/jsx-reader) so we can include [sweet.js](http://sweetjs.org/) macros into the mix :)
 
 See the [Mercury FAQ](https://github.com/Raynos/mercury/blob/master/docs/faq.md) for more details on how to leverage its awesome power!!
+
+As noted we need to decouple the Virtual DOM from any knowledge about that it is a virtual layer for.
+It should just dispatch create, patch and diff events to some Controller that is passed in.
 
 ## UI Render layer
 

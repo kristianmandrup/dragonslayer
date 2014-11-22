@@ -290,9 +290,13 @@ Permit authorize is about to undergo some major refactoring to split it into sev
 
 For client-side OAuth2 Authentication we will likely use [Hello.js](http://adodson.com/hello.js/#quick-start). It looks like a very popular [github repo](https://github.com/MrSwitch/hello.js)
 
-For Node server side Authentication, we will likely be using [Passport.js](http://passportjs.org/) or one of these [auth alternatives](https://nodejsmodules.org/tags/authorization), the most popular is [everyauth](https://github.com/bnoguchi/everyauth/) and looks pretty stable and supports a ton of different auth strategies!!
+For Node server side Authentication, we will likely be using [Passport.js](http://passportjs.org/) or one of these [auth alternatives](https://nodejsmodules.org/tags/authorization)
 
-For the client wew will use JWT authenticated, as described in this [egghead.io screencast](https://egghead.io/lessons/angularjs-basic-server-setup-for-jwt-authentication)
+For the client we will use JWT authentication, as described in this [egghead.io screencast](https://egghead.io/lessons/angularjs-basic-server-setup-for-jwt-authentication)
+
+Here is a great article on [full Client/Server Passport.js app configuration for social login services](http://mherman.org/blog/2013/11/10/social-authentication-with-passport-dot-js/#.VHEbX5PF-wE)
+
+[This Scotch.io Auth article](http://scotch.io/tutorials/javascript/easy-node-authentication-setup-and-local) is super cool as well, with some nice styling to boot!!
 
 ### Mercury
 

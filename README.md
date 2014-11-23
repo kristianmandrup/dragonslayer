@@ -269,6 +269,69 @@ A common App architecture would likely be to use an advanced router for the gene
 
 The Crossroads router being developed will be very modular, so that you can compose the router from various self-contained APIs to compose a router with just the level of complexity/functionality that you need...
 
+### Sub-apps
+
+For a super convenient way to define web apps, we again turn to [webpack](https://github.com/petehunt/webpack-howto))
+
+```js
+// webpack.config.js
+module.exports = {
+  entry: {
+    Profile: './profile.js',
+    Feed: './feed.js'
+  },
+  output: {
+    path: 'build',
+    filename: '[name].js' // Template based on keys in entry above
+  }
+};
+```
+
+### Routing to sub-apps
+
+Essentially we want to have a Router which:
+
+- Secures routes by authorising user access
+- Asynchronously loads resources that the sub-app (route) requires
+
+These powerful routing features can be achieved by [leveraging webpack](https://github.com/petehunt/webpack-howto)
+
+```js
+route('/feed', => {
+  showLoadingState();
+  require.ensure([], function() { // this syntax is weird but it works
+    hideLoadingState();
+    require('./feed').show(); // when this function is called, the module is guaranteed to be synchronously available.
+  });
+})
+
+/// generalised, flexible loading pattern
+
+loadRoute(path, hooks) {
+  hooks = hooks || asyncLoadHooks;
+  hooks.beforeRequire();
+  require.ensure([], function() {
+    hooks.beforeLoaded();
+    require('.' + path).show();
+    hooks.afterLoaded();
+  });  
+}
+
+asyncLoadHooks = {
+  beforeRequire: () => {
+    showLoadingState();  
+  },
+
+  beforeLoaded: () => {
+    hideLoadingState();
+  },
+  afterLoaded: () => {
+  }
+}
+
+loadRoute('/feed')
+```
+
 ### Operational Transformation
 
 We plan to support [Operational Transformation](http://en.wikipedia.org/wiki/Operational_transformation) via [ShareJS](http://sharejs.org/) in the future... please join in on this effort!!
@@ -432,6 +495,19 @@ are also many other options...
 ## Dev tools
 
 [Gobble](https://github.com/gobblejs/gobble) will be used as the main build tool.
+
+## Dynamic module loading
+
+[Instagram](https://www.youtube.com/watch?v=VkTCL6Nqm6Y) aggresively optimize their SPA load times, by loading parts of the app asynchronously as it is needed (by way of the router).
+
+The use [webpack](https://github.com/petehunt/webpack-howto) to provide this functionality!
+
+We should go the same route!!!
+
+### Pragmatic CSS
+
+Instagram recommends using a pragmatic CSS approach. Avoid nested CSS selector, only top lv.
+Aggresively use namespacing. We could (perhaps) achieve this using AbsurdJS and namespace on a per=component basis, using fingerprint (md5 hash) or name of component as the namespace.
 
 ### Package managers
 

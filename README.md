@@ -347,7 +347,9 @@ Perhaps better is javascript in UMD format which can be consumed everywhere as d
 
 [uRequire](http://urequire.org) might be the best candidate. Can convert any set of javascript files (js module) into UMD format.
 
-Huh? This also looks interesting: [Browserify and the Universal Module Definition](http://dontkry.com/posts/code/browserify-and-the-universal-module-definition.html)
+To simply convert to AMD format [gulp wrap amd](https://github.com/phated/gulp-wrap-amd)
+
+This also looks interesting: [Browserify and the Universal Module Definition](http://dontkry.com/posts/code/browserify-and-the-universal-module-definition.html)
 
 Browserify can consume both AMD modules and Globals via `deamdify` and `deglobalify` options! It can even handle ES6 with `es6ify` and also `decomponentify` and `debowerify`.
 

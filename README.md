@@ -332,6 +332,40 @@ asyncLoadHooks = {
 loadRoute('/feed')
 ```
 
+### Module formats and loading
+
+An even better way to achieve this, is to use the [es6-module-loader](https://github.com/ModuleLoader/es6-module-loader) with Traceur as described in the talk: [Practical workflows with ES6 modules](https://www.youtube.com/watch?v=0VUjM-jJf2U)
+
+Another cool option is to use [systemjs](https://github.com/systemjs/systemjs) to load and wrap modules using: RequireJS, CommonJS and globals as ES6 modules, loaded asynchronously in the browser.
+
+[load-scripts-asynchronously](http://stackoverflow.com/questions/7718935/load-scripts-asynchronously)
+The library [EnsureJS](http://ensure.codeplex.com/) can be used, and is perhaps used by Webpack internally (`require.ensure`) ?
+
+A good approach is to use traceur to compile down to CJS or AMD modules and then load via webpack sync: CJS `require.ensure()` or async AMD: `require()` .
+
+Perhaps better is javascript in UMD format which can be consumed everywhere as described in [UMD javascript that runs anywhere](http://bob.yexley.net/umd-javascript-that-runs-anywhere/) which references this [excellent article](http://addyosmani.com/writing-modular-js/) by *Addy Osmani*
+
+[uRequire](http://urequire.org) might be the best candidate. Can convert any set of javascript files (js module) into UMD format.
+
+Huh? This also looks interesting: [Browserify and the Universal Module Definition](http://dontkry.com/posts/code/browserify-and-the-universal-module-definition.html)
+
+Browserify can consume both AMD modules and Globals via `deamdify` and `deglobalify` options! It can even handle ES6 with `es6ify` and also `decomponentify` and `debowerify`.
+
+"You can use multiple transforms in one swoop and have universal module access"
+
+```bash
+npm install deamdify es6ify deglobalify
+browserify -t deamdify -t es6ify -t deglobalify main.js -o bundle.js
+```
+
+Can be used with [Gulp browserify](https://www.npmjs.org/package/gulp-browserify)
+
+IF we convert everything to AMD, we can then reconvert back to ES6 if we need to use it in ES6 based project:
+
+[AMD to ES6](https://github.com/jonbretman/amd-to-as6) oddly enough it is available on npm, as [amd-to-es6](https://www.npmjs.org/package/amd-to-es6)
+
+Awesome!!!
+
 ### Operational Transformation
 
 We plan to support [Operational Transformation](http://en.wikipedia.org/wiki/Operational_transformation) via [ShareJS](http://sharejs.org/) in the future... please join in on this effort!!

@@ -415,6 +415,10 @@ The Bacon Ajax and Promise APIs can be used with Data services.
 
 [CspJS](https://github.com/srikumarks/cspjs) will be the main Async framework. It is a much nicer API for dealing with Async flows, even better than promises. We will likely also use the new ES6 generators.
 
+## Sample apps: Todo MVC & Blog
+
+As soon as the basic infrastructure is in place, we will create a TodoMVC sample app leveraging the infrastructure to see how well it works. We will also create a Blogging app with posts and comments for
+a typical REST style app with nested routes and data.
 
 ## Utils
 

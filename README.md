@@ -332,41 +332,7 @@ asyncLoadHooks = {
 loadRoute('/feed')
 ```
 
-### Module formats and loading
-
-An even better way to achieve this, is to use the [es6-module-loader](https://github.com/ModuleLoader/es6-module-loader) with Traceur as described in the talk: [Practical workflows with ES6 modules](https://www.youtube.com/watch?v=0VUjM-jJf2U)
-
-Another cool option is to use [systemjs](https://github.com/systemjs/systemjs) to load and wrap modules using: RequireJS, CommonJS and globals as ES6 modules, loaded asynchronously in the browser.
-
-[load-scripts-asynchronously](http://stackoverflow.com/questions/7718935/load-scripts-asynchronously)
-The library [EnsureJS](http://ensure.codeplex.com/) can be used, and is perhaps used by Webpack internally (`require.ensure`) ?
-
-A good approach is to use traceur to compile down to CJS or AMD modules and then load via webpack sync: CJS `require.ensure()` or async AMD: `require()` .
-
-Perhaps better is javascript in UMD format which can be consumed everywhere as described in [UMD javascript that runs anywhere](http://bob.yexley.net/umd-javascript-that-runs-anywhere/) which references this [excellent article](http://addyosmani.com/writing-modular-js/) by *Addy Osmani*
-
-[uRequire](http://urequire.org) might be the best candidate. Can convert any set of javascript files (js module) into UMD format.
-
-To simply convert to AMD format [gulp wrap amd](https://github.com/phated/gulp-wrap-amd)
-
-This also looks interesting: [Browserify and the Universal Module Definition](http://dontkry.com/posts/code/browserify-and-the-universal-module-definition.html)
-
-Browserify can consume both AMD modules and Globals via `deamdify` and `deglobalify` options! It can even handle ES6 with `es6ify` and also `decomponentify` and `debowerify`.
-
-"You can use multiple transforms in one swoop and have universal module access"
-
-```bash
-npm install deamdify es6ify deglobalify
-browserify -t deamdify -t es6ify -t deglobalify main.js -o bundle.js
-```
-
-Can be used with [Gulp browserify](https://www.npmjs.org/package/gulp-browserify)
-
-IF we convert everything to AMD, we can then reconvert back to ES6 if we need to use it in ES6 based project:
-
-[AMD to ES6](https://github.com/jonbretman/amd-to-as6) oddly enough it is available on npm, as [amd-to-es6](https://www.npmjs.org/package/amd-to-es6)
-
-Awesome!!!
+We should likely use `System.import` instead and base package management on [JSPM]().
 
 ### Operational Transformation
 
@@ -413,7 +379,18 @@ Using a reactive paradigm we can control what gets re-rendered for any state cha
 See the [Mercury FAQ](https://github.com/Raynos/mercury/blob/master/docs/faq.md) for more details on how to leverage its awesome power!!
 
 As noted we need to decouple the Virtual DOM from any knowledge about that it is a virtual layer for.
-It should just dispatch create, patch and diff events to some Controller that is passed in.
+It should just dispatch `create`, `patch` and `diff` events to some controller or dispatcher that is passed in.
+
+We can further optimize VDom rendering by using [document.createDocumentFragment](https://developer.mozilla.org/en-US/docs/Web/API/document.createDocumentFragment) as I describe and outline in [VDom issue #16](https://github.com/Matt-Esch/vdom/issues/16)
+
+I have also lately added functionality to achieve lazy observable, where the operations are cached and only executed just before the frame is rendered, packing together multiple operations as one so as not to notify the render of changes more than necessary... Still some experimentation and performance testing to do, but looks very promising as it can drastically reduce re-rendering in scenarios with rendered lists and streamed real-time data, which is becoming a common scenario, that has so far been difficult to deal with.
+
+### Render optimizations
+
+Just watched a few Chrome Dev presentations, such as [Wicked Fast](https://www.youtube.com/watch?v=v0xRTEf-ytE) where he indicated that the next Chrome releases will be up to x10 faster on typical application render! Wauw!
+
+Also watched latest update on [Polymer](https://www.youtube.com/watch?v=kV0hgdMpH28) which promises to be super cool, and already has a great list display component which automatically does culling, so as not to display more list elements than can fit on the screen :)
+With other optimizations outlined here, this should give us super fluid real-time data view experience close to native...
 
 ## UI Render layer
 

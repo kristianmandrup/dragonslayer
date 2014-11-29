@@ -25,10 +25,10 @@ function TodoItem(item) {
         editing: hg.value(item.editing || false),
         completed: hg.value(item.completed || false),
         handles: {
-            toggle: toggle,
-            startEdit: startEdit,
-            cancelEdit: cancelEdit,
-            finishEdit: finishEdit
+            toggle: actions.toggle,
+            startEdit: actions.startEdit,
+            cancelEdit: actions.cancelEdit,
+            finishEdit: actions.finishEdit
         }
     });
 }

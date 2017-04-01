@@ -1,5 +1,7 @@
 # Dragon Slayer
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kristianmandrup/dragonslayer.svg)](https://greenkeeper.io/)
+
 A reactive framework that empowers you to *slay Dragons* :)
 
 ![Dragon Slayer](../master/public/img/dragonslayer.jpg?raw=true)
